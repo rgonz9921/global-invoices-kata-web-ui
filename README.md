@@ -83,6 +83,8 @@ src/app/
 - [x] **F2** — Formulario reactivo `/invoices/new` (RF-02): `addControl`/`removeControl` de
   `customsCode` segun el tipo (nunca `display:none`), `InvoiceService.create` -> `POST /invoices`,
   muestra los totales calculados, mapea los errores 400 del backend a los controles.
-- [ ] F3 — Listado y detalle de factura con total en letras (RF-03).
+- [x] **F3** — Listado `/invoices` (mat-table + paginacion + filtro por tipo, ambos roles) y
+  detalle `/invoices/:id` con totales + total en letras (`amountInWords`) y fallback si el SOAP
+  no resolvio. Nav "Facturas" para ambos roles; "Nueva factura" solo OPERADOR.
 - [ ] F4 — Dashboard reactivo agrupado por tipo (RF-04).
 - [ ] F5 — CI (GitHub Actions) + despliegue en Netlify.

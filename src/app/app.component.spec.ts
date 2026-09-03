@@ -47,7 +47,7 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('button')).toBeNull();
   });
 
-  it('shows only the Facturas link for an OPERADOR session', () => {
+  it('shows Facturas but not Dashboard for an OPERADOR session', () => {
     localStorage.setItem(TOKEN_KEY, tokenFor('OPERADOR'));
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
@@ -57,13 +57,13 @@ describe('AppComponent', () => {
     expect(text).not.toContain('Dashboard');
   });
 
-  it('shows only the Dashboard link for an AUDITOR session', () => {
+  it('shows both Facturas and Dashboard for an AUDITOR session', () => {
     localStorage.setItem(TOKEN_KEY, tokenFor('AUDITOR'));
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
+    expect(text).toContain('Facturas');
     expect(text).toContain('Dashboard');
-    expect(text).not.toContain('Facturas');
   });
 });
