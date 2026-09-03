@@ -1,12 +1,23 @@
 <mat-toolbar color="primary">
   <a routerLink="/" class="brand">Global Invoice</a>
-  <span class="spacer"></span>
+
   @if (user$ | async; as user) {
+    <nav class="nav">
+      @if (user.role === 'OPERADOR') {
+        <a mat-button routerLink="/invoices" routerLinkActive="active">Facturas</a>
+      }
+      @if (user.role === 'AUDITOR') {
+        <a mat-button routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      }
+    </nav>
+    <span class="spacer"></span>
     <span class="user">{{ user.email }} &middot; {{ user.role }}</span>
     <button mat-button (click)="logout()">
       <mat-icon>logout</mat-icon>
       Salir
     </button>
+  } @else {
+    <span class="spacer"></span>
   }
 </mat-toolbar>
 
