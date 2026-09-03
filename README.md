@@ -88,5 +88,8 @@ src/app/
 - [x] **F3** — Listado `/invoices` (mat-table + paginacion + filtro por tipo, ambos roles) y
   detalle `/invoices/:id` con totales + total en letras (`amountInWords`) y fallback si el SOAP
   no resolvio. Nav "Facturas" para ambos roles; "Nueva factura" solo OPERADOR.
-- [ ] F4 — Dashboard reactivo agrupado por tipo (RF-04).
+- [x] **F4** — Dashboard reactivo `/dashboard` (solo AUDITOR): `DashboardStore` (RxJS
+  `BehaviorSubject`) que carga el resumen una sola vez, grafica de barras (chart.js/ng2-charts,
+  lazy). Patron Observer: `InvoiceEventsService` propaga la factura creada y el store la aplica
+  **en memoria sin re-consultar al backend** (RF-04).
 - [ ] F5 — CI (GitHub Actions) + despliegue en Netlify.

@@ -1,28 +1,61 @@
-import { Component } from '@angular/core';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { ChartConfiguration } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+import { map } from 'rxjs';
+import { DashboardStore } from '@core/dashboard/dashboard.store';
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [MatCardModule],
-  template: `
-    <div class="page">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Dashboard</mat-card-title>
-          <mat-card-subtitle>Area del rol AUDITOR</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>La grafica reactiva agrupada por tipo de factura se construye en el incremento F4.</p>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  `,
-  styles: `
-    .page {
-      max-width: 720px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-  `,
+  imports: [
+    AsyncPipe,
+    CurrencyPipe,
+    BaseChartDirective,
+    MatCardModule,
+    MatButtonModule,
+    MatProgressBarModule,
+    MatTableModule,
+  ],
+  templateUrl: './dashboard-page.component.html',
+  styleUrl: './dashboard-page.component.scss',
 })
-export class DashboardPageComponent {}
+export class DashboardPageComponent implements OnInit {
+  private readonly store = inject(DashboardStore);
+
+  readonly state$ = this.store.state$;
+  readonly displayedColumns = ['type', 'invoiceCount', 'totalAmount'];
+
+  readonly chartData$ = this.store.summary$.pipe(
+    map(
+      (summary): ChartConfiguration<'bar'>['data'] => ({
+        labels: (summary?.byType ?? []).map((entry) => entry.type),
+        datasets: [
+          {
+            label: 'Total facturado',
+            data: (summary?.byType ?? []).map((entry) => entry.totalAmount),
+            backgroundColor: ['#5b8def', '#f2994a', '#27ae60'],
+          },
+        ],
+      }),
+    ),
+  );
+
+  readonly chartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true } },
+  };
+
+  ngOnInit(): void {
+    this.store.load();
+  }
+
+  reload(): void {
+    this.store.reload();
+  }
+}
