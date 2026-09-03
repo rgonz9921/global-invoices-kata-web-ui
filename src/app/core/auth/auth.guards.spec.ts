@@ -37,7 +37,7 @@ describe('auth guards', () => {
   describe('authGuard', () => {
     it('allows an authenticated user', () => {
       validSession('OPERADOR');
-      expect(runGuard(() => authGuard(route, stateFor('/invoices')))).toBeTrue();
+      expect(runGuard(() => authGuard(route, stateFor('/invoices')))).toBe(true);
     });
 
     it('redirects an anonymous user to /login keeping the requested url', () => {
@@ -50,7 +50,7 @@ describe('auth guards', () => {
   describe('roleGuard', () => {
     it('allows the matching role', () => {
       validSession('AUDITOR');
-      expect(runGuard(() => roleGuard('AUDITOR')(route, stateFor('/dashboard')))).toBeTrue();
+      expect(runGuard(() => roleGuard('AUDITOR')(route, stateFor('/dashboard')))).toBe(true);
     });
 
     it('sends the wrong role to /forbidden', () => {
@@ -67,7 +67,7 @@ describe('auth guards', () => {
 
   describe('guestGuard', () => {
     it('lets an anonymous user reach /login', () => {
-      expect(runGuard(() => guestGuard(route, stateFor('/login')))).toBeTrue();
+      expect(runGuard(() => guestGuard(route, stateFor('/login')))).toBe(true);
     });
 
     it('bounces an authenticated OPERADOR to /invoices', () => {

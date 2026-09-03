@@ -25,9 +25,11 @@ export const routes: Routes = [
   },
   {
     path: 'invoices',
-    canActivate: [authGuard, roleGuard('OPERADOR')],
+    canActivate: [authGuard],
     loadComponent: () =>
-      import('@features/invoices/invoices-page.component').then((m) => m.InvoicesPageComponent),
+      import('@features/invoices/invoice-list/invoice-list.component').then(
+        (m) => m.InvoiceListComponent,
+      ),
   },
   {
     path: 'invoices/new',
@@ -35,6 +37,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@features/invoices/invoice-form/invoice-form.component').then(
         (m) => m.InvoiceFormComponent,
+      ),
+  },
+  {
+    path: 'invoices/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('@features/invoices/invoice-detail/invoice-detail.component').then(
+        (m) => m.InvoiceDetailComponent,
       ),
   },
   {

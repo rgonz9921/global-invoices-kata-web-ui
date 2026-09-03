@@ -83,6 +83,9 @@
           <div class="grand"><dt>Total</dt><dd>{{ invoice.totals.total | currency }}</dd></div>
         </dl>
       </mat-card-content>
+      <mat-card-actions>
+        <a mat-button [routerLink]="['/invoices', invoice.id]">Ver detalle</a>
+      </mat-card-actions>
     </mat-card>
   }
 </div>

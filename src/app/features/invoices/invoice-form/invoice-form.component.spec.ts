@@ -25,10 +25,10 @@ describe('InvoiceFormComponent (RF-02)', () => {
   let fixture: ComponentFixture<InvoiceFormComponent>;
   let component: InvoiceFormComponent;
   let httpMock: HttpTestingController;
-  let snackBar: { open: jasmine.Spy };
+  let snackBar: { open: jest.Mock };
 
   beforeEach(async () => {
-    snackBar = { open: jasmine.createSpy('open') };
+    snackBar = { open: jest.fn() };
     await TestBed.configureTestingModule({
       imports: [InvoiceFormComponent],
       providers: [
@@ -49,20 +49,20 @@ describe('InvoiceFormComponent (RF-02)', () => {
   afterEach(() => httpMock.verify());
 
   it('adds a required customsCode control only when the type is EXPORTACION', () => {
-    expect(component.form.contains('customsCode')).toBeFalse();
+    expect(component.form.contains('customsCode')).toBe(false);
 
     component.form.controls.type.setValue('EXPORTACION');
 
-    expect(component.form.contains('customsCode')).toBeTrue();
+    expect(component.form.contains('customsCode')).toBe(true);
     const control = component.form.get('customsCode')!;
-    expect(control.hasError('required')).toBeTrue();
+    expect(control.hasError('required')).toBe(true);
   });
 
   it('removes the customsCode control when switching away from EXPORTACION', () => {
     component.form.controls.type.setValue('EXPORTACION');
     component.form.controls.type.setValue('NACIONAL');
 
-    expect(component.form.contains('customsCode')).toBeFalse();
+    expect(component.form.contains('customsCode')).toBe(false);
   });
 
   it('does not send customsCode in the payload for a non-EXPORTACION invoice', () => {
@@ -72,7 +72,7 @@ describe('InvoiceFormComponent (RF-02)', () => {
 
     const req = httpMock.expectOne(INVOICES_URL);
     expect(req.request.body).toEqual({ type: 'NACIONAL', description: 'Consultoria', subtotal: 1000 });
-    expect('customsCode' in req.request.body).toBeFalse();
+    expect('customsCode' in req.request.body).toBe(false);
     req.flush(createdInvoice);
   });
 
@@ -97,7 +97,7 @@ describe('InvoiceFormComponent (RF-02)', () => {
     component.submit();
 
     httpMock.expectNone(INVOICES_URL);
-    expect(component.form.touched).toBeTrue();
+    expect(component.form.touched).toBe(true);
   });
 
   it('maps backend field errors onto the matching controls', () => {

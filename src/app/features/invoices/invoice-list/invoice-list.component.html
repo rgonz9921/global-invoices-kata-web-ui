@@ -1,0 +1,78 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Facturas</h2>
+    @if (canCreate) {
+      <a mat-flat-button color="primary" routerLink="/invoices/new">
+        <mat-icon>add</mat-icon>
+        Nueva factura
+      </a>
+    }
+  </div>
+
+  <mat-form-field appearance="outline" class="filter">
+    <mat-label>Tipo</mat-label>
+    <mat-select [(ngModel)]="typeFilter" (selectionChange)="onFilterChange()">
+      <mat-option [value]="''">Todos</mat-option>
+      @for (type of typeOptions; track type) {
+        <mat-option [value]="type">{{ type }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="table-wrapper">
+    @if (loading) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    @if (loadError) {
+      <p class="error">No se pudo cargar el listado de facturas.</p>
+    } @else {
+      <table mat-table [dataSource]="invoices">
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Tipo</th>
+          <td mat-cell *matCellDef="let invoice">{{ invoice.type }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Concepto</th>
+          <td mat-cell *matCellDef="let invoice">{{ invoice.description }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="subtotal">
+          <th mat-header-cell *matHeaderCellDef>Subtotal</th>
+          <td mat-cell *matCellDef="let invoice">{{ invoice.subtotal | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef>Total</th>
+          <td mat-cell *matCellDef="let invoice">{{ invoice.totals.total | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>Creada</th>
+          <td mat-cell *matCellDef="let invoice">{{ invoice.createdAt | date: 'short' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let invoice; columns: displayedColumns"
+          class="clickable"
+          [routerLink]="['/invoices', invoice.id]"
+        ></tr>
+      </table>
+
+      @if (!loading && invoices.length === 0) {
+        <p class="empty">No hay facturas para el filtro seleccionado.</p>
+      }
+    }
+
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPage($event)"
+    />
+  </div>
+</div>

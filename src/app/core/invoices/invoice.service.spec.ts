@@ -45,4 +45,32 @@ describe('InvoiceService', () => {
     req.flush(fakeInvoice);
     expect(received).toEqual(fakeInvoice);
   });
+
+  it('lists invoices with the given filter and pagination params', () => {
+    service.list({ type: 'EXPORTACION', page: 2, size: 5 }).subscribe();
+
+    const req = httpMock.expectOne(
+      (request) => request.method === 'GET' && request.url === INVOICES_URL,
+    );
+    expect(req.request.params.get('type')).toBe('EXPORTACION');
+    expect(req.request.params.get('page')).toBe('2');
+    expect(req.request.params.get('size')).toBe('5');
+    req.flush({ content: [], page: 2, size: 5, totalElements: 0, totalPages: 0, last: true });
+  });
+
+  it('omits the type param when no filter is given', () => {
+    service.list({ page: 0, size: 10 }).subscribe();
+
+    const req = httpMock.expectOne((request) => request.url === INVOICES_URL);
+    expect(req.request.params.has('type')).toBe(false);
+    req.flush({ content: [], page: 0, size: 10, totalElements: 0, totalPages: 0, last: true });
+  });
+
+  it('fetches a single invoice detail by id', () => {
+    service.getById('abc').subscribe();
+
+    const req = httpMock.expectOne(`${INVOICES_URL}/abc`);
+    expect(req.request.method).toBe('GET');
+    req.flush({ ...fakeInvoice, amountInWords: 'mil', amountInWordsAvailable: true });
+  });
 });

@@ -3,9 +3,7 @@
 
   @if (user$ | async; as user) {
     <nav class="nav">
-      @if (user.role === 'OPERADOR') {
-        <a mat-button routerLink="/invoices" routerLinkActive="active">Facturas</a>
-      }
+      <a mat-button routerLink="/invoices" routerLinkActive="active">Facturas</a>
       @if (user.role === 'AUDITOR') {
         <a mat-button routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
       }

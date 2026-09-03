@@ -1,0 +1,53 @@
+.page {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+dl {
+  margin: 0 0 1rem;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+  }
+
+  dt,
+  dd {
+    margin: 0;
+  }
+}
+
+.totals .grand {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin-top: 0.25rem;
+  padding-top: 0.5rem;
+  font-weight: 600;
+}
+
+.in-words {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding-top: 0.75rem;
+
+  h3 {
+    margin: 0 0 0.25rem;
+    font-size: 0.95rem;
+  }
+
+  p {
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  .unavailable {
+    color: rgba(0, 0, 0, 0.6);
+    text-transform: none;
+    font-style: italic;
+  }
+}
+
+.error {
+  padding: 1rem;
+  color: rgba(0, 0, 0, 0.6);
+}
