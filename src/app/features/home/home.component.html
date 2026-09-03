@@ -1,0 +1,21 @@
+<div class="home-page">
+  @if (user$ | async; as user) {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Sesion iniciada</mat-card-title>
+        <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Rol: <strong>{{ user.role }}</strong></p>
+        <p class="hint">Las vistas de facturas y dashboard se habilitan en los siguientes incrementos.</p>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <mat-card>
+      <mat-card-content>
+        <p>No hay una sesion activa.</p>
+        <a mat-flat-button color="primary" routerLink="/login">Ir al login</a>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

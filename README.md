@@ -1,59 +1,85 @@
-# GlobalInvoicesKataWebUi
+# Global Invoice — Web UI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.27.
+Frontend Angular 19 + Angular Material de la prueba tecnica **Global-Invoice** (Davivienda).
+Consume la API REST del backend (`global-invoices-kata-mngr`): auth JWT, RBAC Operador/Auditor,
+motor de tributacion, dashboard y total en letras.
 
-## Development server
+## Stack
 
-To start a local development server, run:
+| | |
+|---|---|
+| Framework | Angular 19 (standalone APIs, sin NgModules) |
+| UI | Angular Material (tema `rose-red`) |
+| Estado | RxJS (`BehaviorSubject`) |
+| Graficas | Chart.js + ng2-charts (dashboard, incremento F4) |
+| Tests | Karma + Jasmine |
+| Hosting | Netlify (build estatico) |
 
-```bash
-ng serve
-```
+## Requisitos
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node 20+, npm 10+
+- El backend corriendo (local en `http://localhost:8080` o el desplegado en Render)
 
-## Code scaffolding
+## Configuracion
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+La URL del backend **no** se lee en runtime: se hornea en el build desde
+`src/environments/`.
 
-```bash
-ng generate component component-name
-```
+| Entorno | Archivo | `apiBaseUrl` |
+|---|---|---|
+| Desarrollo | `environment.ts` | `http://localhost:8080/api/v1` |
+| Produccion | `environment.prod.ts` | URL publica del backend en Render |
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+El build de produccion sustituye `environment.ts` por `environment.prod.ts`
+(`fileReplacements` en `angular.json`). Si cambia la URL de Render, hay que actualizar
+`environment.prod.ts` y redesplegar.
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Ejecutar
 
 ```bash
-ng test
+npm install
+npm start            # ng serve -> http://localhost:4200
 ```
 
-## Running end-to-end tests
+Para probar contra un backend local, arranca el backend con el perfil `dev` y CORS
+permitiendo `http://localhost:4200`.
 
-For end-to-end (e2e) testing, run:
+## Build y tests
 
 ```bash
-ng e2e
+npm run build                                   # build de produccion -> dist/global-invoices-kata-web-ui/browser
+npm test -- --watch=false --browsers=ChromeHeadless
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Arquitectura
 
-## Additional Resources
+```
+src/app/
+  core/          servicios transversales: auth (AuthService, interceptor JWT), modelos
+  features/      vistas por dominio: auth/login, home, (facturas y dashboard en F2-F4)
+  shared/        componentes reutilizables (Atomic Design: atoms/molecules/organisms/templates)
+                 y paginas de estado (403, 404)
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **AuthService** (`core/auth`): login/logout, token en `localStorage`, decodifica el JWT
+  para exponer email + rol via `user$` (`BehaviorSubject`), valida expiracion.
+- **Interceptor** (`core/auth/auth.interceptor.ts`): adjunta `Authorization: Bearer` a las
+  llamadas del API; ante 401 cierra sesion y redirige a `/login`; ante 403 redirige a `/forbidden`.
+- **Ruteo**: rutas limpias (sin `useHash`). El archivo `public/_redirects` (`/* /index.html 200`)
+  evita el 404 de Netlify al recargar en una ruta profunda.
+
+## Flujo de ramas
+
+- `main` — protegida. Solo recibe merges via Pull Request con el pipeline de CI en verde.
+- `feature/f*` — una rama por incremento del roadmap (seccion 13 del plan). Cada incremento
+  = un commit aprobado = un PR.
+
+## Roadmap (frontend)
+
+- [x] **F0** — Bootstrap: auth base (AuthService + interceptor), environments, ruteo limpio
+  + `_redirects`, shell con toolbar, login funcional contra el backend real.
+- [ ] F1 — Guards de rol (`CanActivate`) y redireccion post-login segun rol.
+- [ ] F2 — Formulario dinamico de creacion de factura (RF-02).
+- [ ] F3 — Listado y detalle de factura con total en letras (RF-03).
+- [ ] F4 — Dashboard reactivo agrupado por tipo (RF-04).
+- [ ] F5 — CI (GitHub Actions) + despliegue en Netlify.
