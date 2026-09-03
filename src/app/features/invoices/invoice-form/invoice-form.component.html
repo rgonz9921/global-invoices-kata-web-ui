@@ -1,0 +1,88 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Nueva factura</h2>
+    <a mat-button routerLink="/invoices">Volver</a>
+  </div>
+
+  <mat-card class="form-card">
+    @if (loading) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de factura</mat-label>
+          <mat-select formControlName="type">
+            @for (type of types; track type) {
+              <mat-option [value]="type">{{ type }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Concepto</mat-label>
+          <input matInput formControlName="description" maxlength="200" />
+          @if (form.controls.description.hasError('required') && form.controls.description.touched) {
+            <mat-error>El concepto es obligatorio.</mat-error>
+          }
+          @if (form.controls.description.hasError('maxlength')) {
+            <mat-error>Maximo 200 caracteres.</mat-error>
+          }
+          @if (form.controls.description.hasError('server')) {
+            <mat-error>{{ form.controls.description.getError('server') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Subtotal</mat-label>
+          <input matInput type="number" formControlName="subtotal" min="0" step="0.01" />
+          <span matTextPrefix>$&nbsp;</span>
+          @if (form.controls.subtotal.hasError('required') && form.controls.subtotal.touched) {
+            <mat-error>El subtotal es obligatorio.</mat-error>
+          }
+          @if (form.controls.subtotal.hasError('min')) {
+            <mat-error>El subtotal debe ser mayor que cero.</mat-error>
+          }
+          @if (form.controls.subtotal.hasError('server')) {
+            <mat-error>{{ form.controls.subtotal.getError('server') }}</mat-error>
+          }
+        </mat-form-field>
+
+        @if (customsCodeControl; as customsCode) {
+          <mat-form-field appearance="outline">
+            <mat-label>Codigo Aduanero</mat-label>
+            <input matInput [formControl]="customsCode" maxlength="40" />
+            <mat-hint>Obligatorio para facturas de exportacion.</mat-hint>
+            @if (customsCode.hasError('required') && customsCode.touched) {
+              <mat-error>El codigo aduanero es obligatorio.</mat-error>
+            }
+            @if (customsCode.hasError('server')) {
+              <mat-error>{{ customsCode.getError('server') }}</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading">
+          Crear factura
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  @if (result; as invoice) {
+    <mat-card class="result-card">
+      <mat-card-header>
+        <mat-card-title>Factura creada</mat-card-title>
+        <mat-card-subtitle>{{ invoice.type }} &middot; {{ invoice.description }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <dl class="totals">
+          <div><dt>Subtotal</dt><dd>{{ invoice.totals.subtotal | currency }}</dd></div>
+          <div><dt>IVA</dt><dd>{{ invoice.totals.iva | currency }}</dd></div>
+          <div><dt>Retencion</dt><dd>{{ invoice.totals.retencion | currency }}</dd></div>
+          <div class="grand"><dt>Total</dt><dd>{{ invoice.totals.total | currency }}</dd></div>
+        </dl>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

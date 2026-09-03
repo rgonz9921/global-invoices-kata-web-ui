@@ -1,18 +1,24 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-invoices-page',
-  imports: [MatCardModule],
+  imports: [RouterLink, MatButtonModule, MatCardModule, MatIconModule],
   template: `
     <div class="page">
+      <div class="page-header">
+        <h2>Facturas</h2>
+        <a mat-flat-button color="primary" routerLink="/invoices/new">
+          <mat-icon>add</mat-icon>
+          Nueva factura
+        </a>
+      </div>
       <mat-card>
-        <mat-card-header>
-          <mat-card-title>Facturas</mat-card-title>
-          <mat-card-subtitle>Area del rol OPERADOR</mat-card-subtitle>
-        </mat-card-header>
         <mat-card-content>
-          <p>El formulario de creacion y el listado se construyen en los incrementos F2 y F3.</p>
+          <p>El listado de facturas se construye en el incremento F3.</p>
         </mat-card-content>
       </mat-card>
     </div>
@@ -22,6 +28,11 @@ import { MatCardModule } from '@angular/material/card';
       max-width: 720px;
       margin: 2rem auto;
       padding: 0 1rem;
+    }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   `,
 })
