@@ -82,7 +82,7 @@ describe('InvoiceDetailComponent (RF-03)', () => {
       .flush({}, { status: 404, statusText: 'Not Found' });
     fixture.detectChanges();
 
-    expect(component.notFound).toBeTrue();
+    expect(component.notFound).toBe(true);
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('La factura no existe');
     httpMock.verify();
   });

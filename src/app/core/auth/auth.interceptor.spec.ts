@@ -12,11 +12,11 @@ describe('authInterceptor', () => {
   let http: HttpClient;
   let httpMock: HttpTestingController;
   let auth: AuthService;
-  let router: { navigate: jasmine.Spy };
+  let router: { navigate: jest.Mock };
 
   beforeEach(() => {
     localStorage.clear();
-    router = { navigate: jasmine.createSpy('navigate') };
+    router = { navigate: jest.fn() };
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withInterceptors([authInterceptor])),
@@ -50,13 +50,13 @@ describe('authInterceptor', () => {
     http.get('https://third-party.example.com/data').subscribe();
     const req = httpMock.expectOne('https://third-party.example.com/data');
 
-    expect(req.request.headers.has('Authorization')).toBeFalse();
+    expect(req.request.headers.has('Authorization')).toBe(false);
     req.flush({});
   });
 
   it('logs out and redirects to login on 401 for a non-login request', () => {
     localStorage.setItem(TOKEN_KEY, 'tok123');
-    spyOn(auth, 'logout').and.callThrough();
+    jest.spyOn(auth, 'logout');
 
     http.get(`${environment.apiBaseUrl}/invoices`).subscribe({ error: () => undefined });
     httpMock
@@ -77,7 +77,7 @@ describe('authInterceptor', () => {
   });
 
   it('does not log out on a 401 from the login endpoint', () => {
-    spyOn(auth, 'logout');
+    jest.spyOn(auth, 'logout');
 
     http.post(`${environment.apiBaseUrl}/auth/login`, {}).subscribe({ error: () => undefined });
     httpMock

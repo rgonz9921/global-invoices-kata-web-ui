@@ -43,9 +43,9 @@ describe('AuthService', () => {
     httpMock.expectOne(LOGIN_URL).flush({ accessToken: token, tokenType: 'Bearer', expiresIn: 3600 });
 
     expect(localStorage.getItem(TOKEN_KEY)).toBe(token);
-    expect(service.isAuthenticated()).toBeTrue();
-    expect(service.hasRole('OPERADOR')).toBeTrue();
-    expect(service.hasRole('AUDITOR')).toBeFalse();
+    expect(service.isAuthenticated()).toBe(true);
+    expect(service.hasRole('OPERADOR')).toBe(true);
+    expect(service.hasRole('AUDITOR')).toBe(false);
     expect(emitted!.email).toBe('operador@globalinvoice.com');
   });
 
@@ -57,7 +57,7 @@ describe('AuthService', () => {
     service.logout();
 
     expect(service.currentUser).toBeNull();
-    expect(service.isAuthenticated()).toBeFalse();
+    expect(service.isAuthenticated()).toBe(false);
     expect(localStorage.getItem(TOKEN_KEY)).toBeNull();
   });
 
@@ -66,8 +66,8 @@ describe('AuthService', () => {
     service.login({ email: 'a@b.com', password: 'x' }).subscribe();
     httpMock.expectOne(LOGIN_URL).flush({ accessToken: token, tokenType: 'Bearer', expiresIn: -10 });
 
-    expect(service.isAuthenticated()).toBeFalse();
-    expect(service.hasRole('AUDITOR')).toBeFalse();
+    expect(service.isAuthenticated()).toBe(false);
+    expect(service.hasRole('AUDITOR')).toBe(false);
   });
 
   it('restores a valid session from localStorage on creation', () => {
@@ -81,7 +81,7 @@ describe('AuthService', () => {
     const fresh = TestBed.inject(AuthService);
 
     expect(fresh.currentUser?.email).toBe('restored@b.com');
-    expect(fresh.isAuthenticated()).toBeTrue();
+    expect(fresh.isAuthenticated()).toBe(true);
   });
 
   it('discards an expired token found in localStorage on creation', () => {

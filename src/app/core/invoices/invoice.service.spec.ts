@@ -62,7 +62,7 @@ describe('InvoiceService', () => {
     service.list({ page: 0, size: 10 }).subscribe();
 
     const req = httpMock.expectOne((request) => request.url === INVOICES_URL);
-    expect(req.request.params.has('type')).toBeFalse();
+    expect(req.request.params.has('type')).toBe(false);
     req.flush({ content: [], page: 0, size: 10, totalElements: 0, totalPages: 0, last: true });
   });
 

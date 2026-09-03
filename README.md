@@ -12,7 +12,7 @@ motor de tributacion, dashboard y total en letras.
 | UI | Angular Material (tema `rose-red`) |
 | Estado | RxJS (`BehaviorSubject`) |
 | Graficas | Chart.js + ng2-charts (dashboard, incremento F4) |
-| Tests | Karma + Jasmine |
+| Tests | Jest (`jest-preset-angular`) |
 | Hosting | Netlify (build estatico) |
 
 ## Requisitos
@@ -47,8 +47,10 @@ permitiendo `http://localhost:4200`.
 ## Build y tests
 
 ```bash
-npm run build                                   # build de produccion -> dist/global-invoices-kata-web-ui/browser
-npm test -- --watch=false --browsers=ChromeHeadless
+npm run build          # build de produccion -> dist/global-invoices-kata-web-ui/browser
+npm test               # jest (una pasada)
+npm run test:watch     # jest en modo watch
+npm run test:coverage  # jest con reporte de cobertura -> coverage/
 ```
 
 ## Arquitectura

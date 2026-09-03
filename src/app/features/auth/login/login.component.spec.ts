@@ -22,13 +22,13 @@ describe('LoginComponent', () => {
   let fixture: ComponentFixture<LoginComponent>;
   let component: LoginComponent;
   let httpMock: HttpTestingController;
-  let router: { navigateByUrl: jasmine.Spy };
+  let router: { navigateByUrl: jest.Mock };
   let redirectParam: string | null;
 
   beforeEach(async () => {
     localStorage.clear();
     redirectParam = null;
-    router = { navigateByUrl: jasmine.createSpy('navigateByUrl') };
+    router = { navigateByUrl: jest.fn() };
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
@@ -73,13 +73,13 @@ describe('LoginComponent', () => {
     component.submit();
 
     httpMock.expectNone(LOGIN_URL);
-    expect(component.form.touched).toBeTrue();
+    expect(component.form.touched).toBe(true);
   });
 
   it('redirects an OPERADOR to /invoices after login', () => {
     submitWith('OPERADOR');
     expect(router.navigateByUrl).toHaveBeenCalledWith('/invoices');
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
   });
 
   it('redirects an AUDITOR to /dashboard after login', () => {
@@ -99,6 +99,6 @@ describe('LoginComponent', () => {
     httpMock.expectOne(LOGIN_URL).flush({}, { status: 401, statusText: 'Unauthorized' });
 
     expect(component.errorMessage).toContain('Credenciales');
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
   });
 });

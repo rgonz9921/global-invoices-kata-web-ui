@@ -112,7 +112,7 @@ describe('InvoiceListComponent', () => {
 
   it('allows creating invoices only for OPERADOR', async () => {
     const operador = await setup('OPERADOR');
-    expect(operador.component.canCreate).toBeTrue();
+    expect(operador.component.canCreate).toBe(true);
     operador.fixture.detectChanges();
     operador.httpMock.expectOne((r) => r.url === INVOICES_URL).flush(page([]));
     operador.httpMock.verify();
@@ -121,7 +121,7 @@ describe('InvoiceListComponent', () => {
     localStorage.clear();
 
     const auditor = await setup('AUDITOR');
-    expect(auditor.component.canCreate).toBeFalse();
+    expect(auditor.component.canCreate).toBe(false);
     auditor.fixture.detectChanges();
     auditor.httpMock.expectOne((r) => r.url === INVOICES_URL).flush(page([]));
     auditor.httpMock.verify();
