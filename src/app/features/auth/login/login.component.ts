@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AuthService } from '@core/auth/auth.service';
+import { landingRouteForRole } from '@core/auth/redirect';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +26,7 @@ export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   loading = false;
   errorMessage: string | null = null;
@@ -49,13 +51,22 @@ export class LoginComponent {
     this.auth.login(this.form.getRawValue()).subscribe({
       next: () => {
         this.loading = false;
-        void this.router.navigateByUrl('/');
+        void this.router.navigateByUrl(this.resolveTarget());
       },
       error: (error: unknown) => {
         this.loading = false;
         this.errorMessage = this.resolveError(error);
       },
     });
+  }
+
+  private resolveTarget(): string {
+    const requested = this.route.snapshot.queryParamMap.get('redirect');
+    if (requested) {
+      return requested;
+    }
+    const user = this.auth.currentUser;
+    return user ? landingRouteForRole(user.role) : '/';
   }
 
   private resolveError(error: unknown): string {

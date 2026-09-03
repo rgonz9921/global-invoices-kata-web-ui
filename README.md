@@ -78,7 +78,8 @@ src/app/
 
 - [x] **F0** — Bootstrap: auth base (AuthService + interceptor), environments, ruteo limpio
   + `_redirects`, shell con toolbar, login funcional contra el backend real.
-- [ ] F1 — Guards de rol (`CanActivate`) y redireccion post-login segun rol.
+- [x] **F1** — Guards `authGuard` / `roleGuard` / `guestGuard`, rutas `/invoices` (OPERADOR) y
+  `/dashboard` (AUDITOR), redireccion post-login segun rol (u `?redirect=`), nav del toolbar por rol.
 - [ ] F2 — Formulario dinamico de creacion de factura (RF-02).
 - [ ] F3 — Listado y detalle de factura con total en letras (RF-03).
 - [ ] F4 — Dashboard reactivo agrupado por tipo (RF-04).
