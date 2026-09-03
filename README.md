@@ -80,7 +80,9 @@ src/app/
   + `_redirects`, shell con toolbar, login funcional contra el backend real.
 - [x] **F1** — Guards `authGuard` / `roleGuard` / `guestGuard`, rutas `/invoices` (OPERADOR) y
   `/dashboard` (AUDITOR), redireccion post-login segun rol (u `?redirect=`), nav del toolbar por rol.
-- [ ] F2 — Formulario dinamico de creacion de factura (RF-02).
+- [x] **F2** — Formulario reactivo `/invoices/new` (RF-02): `addControl`/`removeControl` de
+  `customsCode` segun el tipo (nunca `display:none`), `InvoiceService.create` -> `POST /invoices`,
+  muestra los totales calculados, mapea los errores 400 del backend a los controles.
 - [ ] F3 — Listado y detalle de factura con total en letras (RF-03).
 - [ ] F4 — Dashboard reactivo agrupado por tipo (RF-04).
 - [ ] F5 — CI (GitHub Actions) + despliegue en Netlify.

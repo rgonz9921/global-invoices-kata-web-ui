@@ -30,6 +30,14 @@ export const routes: Routes = [
       import('@features/invoices/invoices-page.component').then((m) => m.InvoicesPageComponent),
   },
   {
+    path: 'invoices/new',
+    canActivate: [authGuard, roleGuard('OPERADOR')],
+    loadComponent: () =>
+      import('@features/invoices/invoice-form/invoice-form.component').then(
+        (m) => m.InvoiceFormComponent,
+      ),
+  },
+  {
     path: 'dashboard',
     canActivate: [authGuard, roleGuard('AUDITOR')],
     loadComponent: () =>

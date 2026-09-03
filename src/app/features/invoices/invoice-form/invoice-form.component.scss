@@ -1,0 +1,48 @@
+.page {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-card {
+  overflow: hidden;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.result-card {
+  margin-top: 1.5rem;
+}
+
+.totals {
+  margin: 0;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+  }
+
+  dt,
+  dd {
+    margin: 0;
+  }
+
+  .grand {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    margin-top: 0.25rem;
+    padding-top: 0.5rem;
+    font-weight: 600;
+  }
+}
