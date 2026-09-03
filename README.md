@@ -53,12 +53,20 @@ npm run test:watch     # jest en modo watch
 npm run test:coverage  # jest con reporte de cobertura -> coverage/
 ```
 
+## Despliegue
+
+CI en GitHub Actions (`.github/workflows/ci.yml`: `npm ci` + `npm test` + `npm run build`) y
+hosting en **Netlify** (`netlify.toml`: publish `dist/global-invoices-kata-web-ui/browser`, Node 20).
+Netlify redespliega solo en cada push a `main`. El backend debe incluir el dominio de Netlify en
+`CORS_ALLOWED_ORIGINS` (variable de entorno en Render). Detalle completo en `DEPLOYMENT.md`.
+
 ## Arquitectura
 
 ```
 src/app/
-  core/          servicios transversales: auth (AuthService, interceptor JWT), modelos
-  features/      vistas por dominio: auth/login, home, (facturas y dashboard en F2-F4)
+  core/          servicios transversales: auth (AuthService, guards, interceptor JWT),
+                 invoices (InvoiceService, InvoiceEventsService), dashboard (store), modelos
+  features/      vistas por dominio: auth/login, invoices (form/list/detail), dashboard
   shared/        componentes reutilizables (Atomic Design: atoms/molecules/organisms/templates)
                  y paginas de estado (403, 404)
 ```
@@ -92,4 +100,6 @@ src/app/
   `BehaviorSubject`) que carga el resumen una sola vez, grafica de barras (chart.js/ng2-charts,
   lazy). Patron Observer: `InvoiceEventsService` propaga la factura creada y el store la aplica
   **en memoria sin re-consultar al backend** (RF-04).
-- [ ] F5 — CI (GitHub Actions) + despliegue en Netlify.
+- [x] **F5** — CI en GitHub Actions (`npm ci` + Jest + build prod) y despliegue en Netlify
+  (`netlify.toml`, `.nvmrc`, publish dir del builder nuevo, SPA fallback via `_redirects`).
+  `environment.prod.ts` apunta a Render; CORS del backend abierto al dominio Netlify por env var.

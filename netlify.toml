@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist/global-invoices-kata-web-ui/browser"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# El fallback SPA para rutas limpias lo aporta `public/_redirects`
+# (`/*  /index.html  200`), que el build copia al `publish` dir.
