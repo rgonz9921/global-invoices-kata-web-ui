@@ -1,0 +1,68 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Dashboard</h2>
+    <button mat-button (click)="reload()">Actualizar</button>
+  </div>
+
+  @if (state$ | async; as state) {
+    @if (state.loading) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    @if (state.error && !state.summary) {
+      <p class="error">No se pudo cargar el dashboard.</p>
+    }
+
+    @if (state.summary; as summary) {
+      <div class="kpis">
+        <mat-card>
+          <mat-card-content>
+            <span class="kpi-label">Total facturado</span>
+            <span class="kpi-value">{{ summary.grandTotal | currency }}</span>
+          </mat-card-content>
+        </mat-card>
+        <mat-card>
+          <mat-card-content>
+            <span class="kpi-label">Facturas</span>
+            <span class="kpi-value">{{ summary.totalInvoices }}</span>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Total facturado por tipo</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart">
+            <canvas
+              baseChart
+              type="bar"
+              [data]="(chartData$ | async)!"
+              [options]="chartOptions"
+            ></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <table mat-table [dataSource]="summary.byType">
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Tipo</th>
+            <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+          </ng-container>
+          <ng-container matColumnDef="invoiceCount">
+            <th mat-header-cell *matHeaderCellDef>Facturas</th>
+            <td mat-cell *matCellDef="let row">{{ row.invoiceCount }}</td>
+          </ng-container>
+          <ng-container matColumnDef="totalAmount">
+            <th mat-header-cell *matHeaderCellDef>Total</th>
+            <td mat-cell *matCellDef="let row">{{ row.totalAmount | currency }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </mat-card>
+    }
+  }
+</div>

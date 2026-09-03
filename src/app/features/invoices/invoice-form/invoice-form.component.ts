@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { InvoiceEventsService } from '@core/invoices/invoice-events.service';
 import { InvoiceService } from '@core/invoices/invoice.service';
 import {
   ApiValidationError,
@@ -47,6 +48,7 @@ interface InvoiceFormModel {
 })
 export class InvoiceFormComponent {
   private readonly invoiceService = inject(InvoiceService);
+  private readonly invoiceEvents = inject(InvoiceEventsService);
   private readonly snackBar = inject(MatSnackBar);
 
   readonly types = INVOICE_TYPES;
@@ -94,6 +96,7 @@ export class InvoiceFormComponent {
       next: (invoice) => {
         this.loading = false;
         this.result = invoice;
+        this.invoiceEvents.emitCreated(invoice);
         this.snackBar.open(`Factura ${invoice.type} creada`, 'OK', { duration: 4000 });
         this.form.reset({ type: 'NACIONAL', description: '', subtotal: null });
         this.syncCustomsCode('NACIONAL');

@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '@env/environment';
+import { InvoiceEventsService } from '@core/invoices/invoice-events.service';
 import { InvoiceResponse } from '@core/models/invoice.models';
 import { InvoiceFormComponent } from './invoice-form.component';
 
@@ -130,5 +131,17 @@ describe('InvoiceFormComponent (RF-02)', () => {
 
     expect(component.result?.totals.total).toBe(1190);
     expect(component.form.controls.description.value).toBe('');
+  });
+
+  it('emits the created invoice on the events channel (RF-04)', () => {
+    const events = TestBed.inject(InvoiceEventsService);
+    const emitted: InvoiceResponse[] = [];
+    events.created$.subscribe((invoice) => emitted.push(invoice));
+
+    component.form.patchValue({ type: 'NACIONAL', description: 'Consultoria', subtotal: 1000 });
+    component.submit();
+    httpMock.expectOne(INVOICES_URL).flush(createdInvoice);
+
+    expect(emitted).toEqual([createdInvoice]);
   });
 });

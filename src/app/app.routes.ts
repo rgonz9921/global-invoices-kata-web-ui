@@ -50,8 +50,8 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     canActivate: [authGuard, roleGuard('AUDITOR')],
-    loadComponent: () =>
-      import('@features/dashboard/dashboard-page.component').then((m) => m.DashboardPageComponent),
+    loadChildren: () =>
+      import('@features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
   },
   {
     path: 'forbidden',
